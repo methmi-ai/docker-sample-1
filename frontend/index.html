@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Grade Predictor</title>
+</head>
+<body>
+  <h1>Predict Your Grade</h1>
+  <input type="number" id="hours" placeholder="Study hours">
+  <button onclick="predict()">Predict</button>
+  <h2 id="result"></h2>
+
+  <script>
+    async function predict() {
+      const hours = document.getElementById('hours').value;
+      const res = await fetch('http://localhost/api/predict', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({study_hours: +hours})
+      });
+      const data = await res.json();
+      document.getElementById('result').innerText = 
+        `Predicted Grade: ${data.predicted_grade}`;
+    }
+  </script>
+</body>
+</html>

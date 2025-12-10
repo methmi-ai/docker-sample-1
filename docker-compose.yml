@@ -1,0 +1,26 @@
+services:
+  api:
+    build: ./app
+    container_name: grade-api
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    build:
+      context: .              # Root directory as context
+      dockerfile: ./nginx/Dockerfile  # Path to Dockerfile
+    container_name: grade-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+networks:
+  default:
+    name: grade_predictor_net
